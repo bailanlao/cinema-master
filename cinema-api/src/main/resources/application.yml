@@ -12,6 +12,7 @@ spring:
       matching-strategy: ant_path_matcher
 
 
+
   datasource:
     url: jdbc:mysql://localhost:3306/cinema?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai&useSSL=false
     username: root
@@ -50,6 +51,9 @@ logstash:
 mybatis-plus:
   configuration:
     map-underscore-to-camel-case: true
+  global-config:
+    db-config:
+      id-type: auto #id生成规则：数据库id自增
 
 jwt:
   tokenHeader: Authorization #JWT??????

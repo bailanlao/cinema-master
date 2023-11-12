@@ -11,9 +11,11 @@ import com.cinema.cinemaapi.dto.UmsMenuNode;
 import com.cinema.cinemaapi.service.UmsMenuService;
 import com.cinema.cinemacommon.api.CommonPage;
 import com.cinema.cinemacommon.api.CommonResult;
+import com.cinema.cinemambp.mapper.UmsMenuMapper;
 import com.cinema.cinemambp.model.Movies;
 import com.cinema.cinemambp.model.UmsMenu;
 
+import com.github.pagehelper.PageHelper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -37,6 +39,9 @@ public class UmsMenuController {
 
     @Autowired
     private UmsMenuService menuService;
+
+    @Autowired
+    private UmsMenuMapper menuMapper;
 
     @ApiOperation("添加后台菜单")
     @RequestMapping(value = "/create", method = RequestMethod.POST)
@@ -87,14 +92,13 @@ public class UmsMenuController {
     @ApiOperation("分页查询后台菜单")
     @RequestMapping(value = "/list/{parentId}", method = RequestMethod.GET)
     @ResponseBody
-    public CommonResult<Page> list(@PathVariable Long parentId,
+    public CommonResult<CommonPage<UmsMenu>> list(@PathVariable Long parentId,
                                                   @RequestParam(value = "pageSize", defaultValue = "5") Integer pageSize,
                                                   @RequestParam(value = "pageNum", defaultValue = "1") Integer pageNum) {
-        Page<UmsMenu> pageInfo = new Page<>(pageNum, pageSize);
-        QueryWrapper<UmsMenu> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("parent_id", parentId);
-        menuService.page(pageInfo, queryWrapper);
-        return CommonResult.success(pageInfo);
+        PageHelper.startPage(pageNum, pageSize);
+        List<UmsMenu> menuList = menuMapper.selectList(new QueryWrapper<UmsMenu>().eq("parent_id", parentId));
+
+        return CommonResult.success(CommonPage.restPage(menuList));
     }
 
     @ApiOperation("树形结构返回所有菜单列表")

@@ -1,6 +1,8 @@
 package com.cinema.cinemaapi.controller;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.cinema.cinemaapi.dto.UmsAdminLoginParam;
 import com.cinema.cinemaapi.dto.UmsAdminParam;
@@ -8,8 +10,11 @@ import com.cinema.cinemaapi.service.UmsAdminService;
 import com.cinema.cinemaapi.service.UmsRoleService;
 import com.cinema.cinemacommon.api.CommonPage;
 import com.cinema.cinemacommon.api.CommonResult;
+import com.cinema.cinemambp.mapper.UmsAdminMapper;
 import com.cinema.cinemambp.model.UmsAdmin;
+import com.cinema.cinemambp.model.UmsMenu;
 import com.cinema.cinemambp.model.UmsRole;
+import com.github.pagehelper.PageHelper;
 import io.swagger.annotations.Api;
 
 import io.swagger.annotations.ApiOperation;
@@ -20,6 +25,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -37,6 +43,8 @@ public class UmsAdminController {
     private String tokenHead;
     @Autowired
     private UmsRoleService roleService;
+    @Autowired
+    private UmsAdminMapper adminMapper;
 
     @ApiOperation(value = "用户注册")
     @PostMapping("/register")
@@ -90,11 +98,17 @@ public class UmsAdminController {
 
     @ApiOperation(value = "根据用户名或姓名分页获取用户列表")
     @GetMapping("/list")
-    public CommonResult<Page<UmsAdmin>> fetchList(@RequestParam(value = "keyword", required = false) String keyword,
+    public CommonResult<CommonPage<UmsAdmin>> fetchList(@RequestParam(value = "keyword", required = false) String keyword,
                                                   @RequestParam(value = "pageSize", defaultValue = "5") Integer pageSize,
                                                   @RequestParam(value = "pageNum", defaultValue = "1") Integer pageNum) {
-        Page<UmsAdmin> adminPage = adminService.list(keyword, pageSize, pageNum);
-        return CommonResult.success(adminPage);
+        PageHelper.startPage(pageNum, pageSize);
+        List<UmsAdmin> adminList = new ArrayList<>();
+        if (!StrUtil.isEmpty(keyword)) {
+            adminList = adminMapper.selectList(new QueryWrapper<UmsAdmin>().like("username", keyword).or().like("nick_name", keyword));
+        }else{
+            adminList = adminMapper.selectList(new QueryWrapper<>());
+        }
+        return CommonResult.success(CommonPage.restPage(adminList));
     }
 
     @ApiOperation("修改账号状态")

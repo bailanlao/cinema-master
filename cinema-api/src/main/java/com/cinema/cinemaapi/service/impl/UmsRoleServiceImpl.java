@@ -2,6 +2,7 @@ package com.cinema.cinemaapi.service.impl;
 
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.cinema.cinemaapi.dao.UmsRoleDao;
@@ -14,6 +15,7 @@ import com.github.pagehelper.PageHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -27,6 +29,8 @@ public class UmsRoleServiceImpl extends ServiceImpl<UmsRoleMapper, UmsRole> impl
 
     @Autowired
     private UmsRoleResourceRelationService roleResourceRelationService;
+    @Autowired
+    private UmsRoleMapper roleMapper;
 
     @Override
     public List<UmsMenu> getMenuList(Long adminId) {
@@ -41,7 +45,14 @@ public class UmsRoleServiceImpl extends ServiceImpl<UmsRoleMapper, UmsRole> impl
 
     @Override
     public List<UmsRole> listByKeyword(String keyword, Integer pageSize, Integer pageNum) {
-        return roleDao.listByName(keyword,pageSize,pageNum);
+        PageHelper.startPage(pageNum, pageSize);
+        List<UmsRole> roleList =new ArrayList<>();
+        if (!StrUtil.isEmpty(keyword)) {
+            roleList = roleDao.listByName(keyword,pageSize,pageNum);
+        }else{
+            roleList=roleMapper.selectList(new QueryWrapper<>());
+        }
+        return roleList;
     }
 
     @Override

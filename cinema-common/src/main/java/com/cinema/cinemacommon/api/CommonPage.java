@@ -4,6 +4,7 @@ package com.cinema.cinemacommon.api;/**
  * @Date 2023/10/30
  */
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.github.pagehelper.PageInfo;
 import org.springframework.data.domain.Page;
 
@@ -36,6 +37,8 @@ public class CommonPage<T> {
      * 分页数据
      */
     private List<T> list;
+
+
 
     /**
      * 将PageHelper分页后的list转为分页信息
