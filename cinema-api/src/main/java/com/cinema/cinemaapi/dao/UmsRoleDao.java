@@ -13,7 +13,7 @@ public interface UmsRoleDao {
      */
     List<UmsMenu> getMenuList(@Param("adminId")Long adminId);
 
-    int updateByPrimaryKeySelective(@Param("record")UmsRole record);
+    int updateByPrimaryKeySelective(UmsRole record);
 
     List<UmsRole> listByName(@Param("keyword") String keyword, @Param("pageSize") Integer pageSize, @Param("offset") Integer offset);
 

@@ -11,5 +11,5 @@ import java.util.List;
  * @Date 2023/10/30
  */
 public interface UmsMenuDao {
-    int updateByPrimaryKeySelective(@Param("UmsMenu") UmsMenu record);
+    int updateByPrimaryKeySelective( UmsMenu record);
 }

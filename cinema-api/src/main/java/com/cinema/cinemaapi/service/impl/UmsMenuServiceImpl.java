@@ -18,8 +18,9 @@ import java.util.stream.Collectors;
 public class UmsMenuServiceImpl extends ServiceImpl<UmsMenuMapper, UmsMenu> implements UmsMenuService {
     @Autowired
     private UmsMenuDao menuDao;
+    @Autowired
+    private UmsMenuMapper menuMapper;
     @Override
-
     public boolean create(UmsMenu umsMenu) {
         umsMenu.setCreateTime(new Date());
         updateLevel(umsMenu);
