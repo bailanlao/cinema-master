@@ -8,12 +8,9 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class UmsAdmin implements Serializable {
-    @TableId(value = "id",type = IdType.AUTO)
 
     private Long id;
-
     private String username;
-
     private String password;
 
     @ApiModelProperty(value = "头像")
