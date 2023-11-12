@@ -25,7 +25,7 @@
             ar.admin_id = #{adminId}
           AND ur.id IS NOT NULL
         GROUP BY
-            ur.id
+            ur.id,ur.create_time,ur.`name`,ur.url,ur.description,ur.category_id
     </select>
 
     <select id="getRoleList" resultType="com.cinema.cinemambp.model.UmsRole">
